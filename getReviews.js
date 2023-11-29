@@ -2,7 +2,7 @@ const FileSystem = require("fs");
 const prompt = require("prompt-sync")({sigint: true})
 var query = `
 query($search: String){
-  Media(search: $search) {
+  Media(search: $search type: ANIME) {
     title {
       romaji
       english
