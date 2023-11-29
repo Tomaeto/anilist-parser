@@ -15,6 +15,7 @@ query($search: String){
         node {
           score
           body
+          id
         }
       }
     }
@@ -45,8 +46,7 @@ var url = 'https://graphql.anilist.co',
 
 // Make the HTTP Api request
 fetch(url, options).then(handleResponse)
-                   .then(handleData)
-                   .then(handleError);
+                   .then(handleData);
 
  function handleResponse(response) {
     return response.json().then(function (json) {
@@ -69,14 +69,15 @@ function handleData(data) {
    FileSystem.writeFile('./reviews/data.json', JSON.stringify(reviewData), (error) => {
     if (error) throw error;
    });
-   //Saving reviews w/ score and body of text as reviews.json
-   FileSystem.writeFile('./reviews/reviews.json', JSON.stringify(data.data.Media.reviews.edges), (error) => {
-    if (error) throw error;
-   })
-  }
 
-function handleError(error) {
-    if (error) {
-    throw error;
-    }
-}
+   let id;
+   let filename = './reviews/'
+   //Saving each review as a separate JSON containing score and body of text, named by review ID
+   for (let i in data.data.Media.reviews.edges) {
+      id = data.data.Media.reviews.edges[i].node.id.toString()
+      FileSystem.writeFile(filename + id + '.json', JSON.stringify(data.data.Media.reviews.edges[i].node), (error) => {
+        if (error) throw error;
+      })
+      
+   }
+  }
