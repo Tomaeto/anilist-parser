@@ -1,4 +1,5 @@
 const FileSystem = require("fs");
+const prompt = require("prompt-sync")({sigint: true})
 var query = `
 query($search: String){
   Media(search: $search) {
@@ -22,9 +23,10 @@ query($search: String){
 `;
 
 
+
 // Define our query variables and values that will be used in the query request
 var variables = {
-    search: 'Lucky☆Star'
+    search: prompt("Enter series to search: ")
 };
 
 // Define the config we'll need for our Api request
